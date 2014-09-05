@@ -1,0 +1,182 @@
+<!doctype html>
+<head>
+    <meta charset="UTF-8">
+    <title>swipeSlide</title>
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui">
+<style>
+*{
+    margin: 0;
+    padding: 0;
+    /* 防止点击闪烁 */
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    /* 缩放网页，文字大小不变 */
+    -webkit-text-size-adjust:none;
+}
+.slide{
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.slide:after{
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: 50%;
+}
+.slide ul{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.slide li{
+    list-style: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.slide li img{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.slide .dot{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 0;
+}
+.slide .dot span{
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: 5px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+}
+.slide .dot .cur{
+    background-color: #fff;
+}
+
+</style>
+</head>
+<body>
+<h1><a href="http://ons.me/" target="_blank" title="一个热爱网络的年轻人的博客">西门的后花园</a></h1>
+<h2><a href="http://ons.me/500.html" target="_blank">Zepto swipeSlide Plugin，移动端基于Zepto的图片轮播插件</a></h2>
+
+<div class="slide" id="slide1">
+    <ul>
+        <li>
+            <a href="//m.yhd.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.baidu.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//m.taobao.com/">
+                <img src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.qq.com/">
+                <img src="http://d10.yihaodianimg.com/N07/M09/26/8B/CgQI0FQFd8-ACrb7AADBtSan3a084000.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="slide" id="slide2">
+    <ul>
+        <li>
+            <a href="//m.yhd.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.baidu.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//m.taobao.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.qq.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/N07/M09/26/8B/CgQI0FQFd8-ACrb7AADBtSan3a084000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.163.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d11.yihaodianimg.com/N05/M07/8B/45/CgQI01QGlhyAevtRAADW1vYf_BE12500.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.sohu.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/N06/M0B/2F/38/CgQIzlQHyBWAbOr0AAChSgod8ho33700.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="slide" id="slide3">
+    <ul>
+        <li>
+            <a href="//m.yhd.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.baidu.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//m.taobao.com/">
+                <img src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.qq.com/">
+                <img src="http://d10.yihaodianimg.com/N07/M09/26/8B/CgQI0FQFd8-ACrb7AADBtSan3a084000.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+    <div class="dot">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+<script src="js/zepto.min.js"></script>
+<script src="js/swipeSlide.min.js"></script>
+<script>
+$(function(){
+    $('#slide1').swipeSlide();
+
+    $('#slide2').swipeSlide({
+        autoSwipe : false,
+        lazyLoad : true
+    });
+
+    $('#slide3').swipeSlide({
+        speed : 3000
+    },function(i){
+        $('.dot').children().eq(i).addClass('cur').siblings().removeClass('cur');
+    });
+});
+</script>
+</body>
+</html>
