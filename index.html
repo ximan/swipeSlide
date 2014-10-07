@@ -70,12 +70,11 @@ h2{
 .slide .dot .cur{
     background-color: #fff;
 }
-
 </style>
 </head>
 <body>
 <h1><a href="http://ons.me/" target="_blank" title="一个热爱网络的年轻人的博客">西门的后花园</a></h1>
-<h2><a href="http://ons.me/500.html" target="_blank">Zepto swipeSlide Plugin，移动端基于Zepto的图片轮播插件</a></h2>
+<h2><a href="http://ons.me/500.html" target="_blank">swipeSlide for Zepto/jQuery Plugin，移动端（基于Zepto/jQuery）的轮播插件</a></h2>
 
 <div class="slide" id="slide1">
     <ul>
@@ -104,17 +103,17 @@ h2{
 
 <div class="slide" id="slide2">
     <ul>
-        <li data-index="0">
+        <li>
             <a href="//m.yhd.com/">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
             </a>
         </li>
-        <li data-index="1">
+        <li>
             <a href="//www.baidu.com/">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
             </a>
         </li>
-        <li data-index="2">
+        <li>
             <a href="//m.taobao.com/">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
             </a>
@@ -177,11 +176,14 @@ $(function(){
 
     $('#slide2').swipeSlide({
         autoSwipe : false,
+        continuousScroll:true,
         lazyLoad : true
     });
 
     $('#slide3').swipeSlide({
-        speed : 3000
+        continuousScroll:true,
+        speed : 3000,
+        transitionType : 'cubic-bezier(0.22, 0.69, 0.72, 0.88)'
     },function(i){
         $('.dot').children().eq(i).addClass('cur').siblings().removeClass('cur');
     });

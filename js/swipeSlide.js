@@ -1,7 +1,7 @@
 /**
  * Zepto swipeSlide Plugin
  * 西门 http://ons.me/500.html
- * 20140930 v1.1
+ * 20141007 v2.0
  */
 
 ;(function($){
@@ -9,42 +9,69 @@
     $.fn.swipeSlide = function(options,callback){
         var _index = 0,
             _startX = 0,
+            _startY = 0,
             _moveX = 0,
+            _moveY = 0,
+            _moveDistance = 0,
             _curX = 0,
-            autoSwipe,
+            _curY = 0,
+            autoScroll,
             _touchDistance = 50,
-            firstScrollRight = true,
+            _loadPicNum = 0,
+            firstMovePrev = true,
             $this = $(this),
             opts = $.extend({}, {
-                ul : $this.children('ul'),
-                li : $this.children().children('li'),
-                autoSwipe : true,
-                speed : 4000,
-                lazyLoad : false
+                ul : $this.children('ul'),              // 父dom
+                li : $this.children().children('li'),   // 子dom
+                continuousScroll : false,               // 连续滚动
+                autoSwipe : true,                       // 自动切换
+                speed : 4000,                           // 切换速度
+                axisX : true,                           // X轴
+                transitionType : 'ease',                // 过渡类型
+                lazyLoad : false                        // 懒加载
             }, options || {}),
             _liWidth = opts.li.width(),
+            _liHeight = opts.li.height(),
             _liLength = opts.li.length,
             callback = callback || function(){};
 
         // 初始化
         (function(){
-            // 复制dom
-            opts.ul.prepend(opts.li.last().clone()).append(opts.li.first().clone());
-            fnTranslate(opts.ul.children().first(),_liWidth*-1);
-            fnTranslate(opts.ul.children().last(),_liWidth*_liLength);
+            // 连续滚动，需要复制dom
+            if(opts.continuousScroll){
+                opts.ul.prepend(opts.li.last().clone()).append(opts.li.first().clone());
+                if(opts.axisX){
+                    fnTranslate(opts.ul.children().first(),_liWidth*-1);
+                    fnTranslate(opts.ul.children().last(),_liWidth*_liLength);
+                }else{
+                    fnTranslate(opts.ul.children().first(),_liHeight*-1);
+                    fnTranslate(opts.ul.children().last(),_liHeight*_liLength);
+                }
+            }
 
             // 懒加载图片
             if(opts.lazyLoad){
                 var i = 0;
-                for(i; i<=2; i++){
+                if(opts.continuousScroll){
+                    _loadPicNum = 3;
+                }else{
+                    _loadPicNum = 2;
+                }
+                for(i; i < _loadPicNum; i++){
                     fnLazyLoad(i);
                 }
             }
 
             // 给初始图片定位
-            opts.li.each(function(i){
-                fnTranslate($(this),_liWidth*i);
-            });
+            if(opts.axisX){
+                opts.li.each(function(i){
+                    fnTranslate($(this),_liWidth*i);
+                });
+            }else{
+                opts.li.each(function(i){
+                    fnTranslate($(this),_liHeight*i);
+                });
+            }
 
             // 自动滚动
             fnAutoSwipe();
@@ -69,25 +96,39 @@
         // css过渡
         function fnTransition(dom,num){
             dom.css({
-                '-webkit-transition':'all '+num+'s',
-                'transition':'all '+num+'s'
+                '-webkit-transition':'all '+num+'s '+opts.transitionType,
+                'transition':'all '+num+'s '+opts.transitionType
             });
         }
 
         // css滚动
         function fnTranslate(dom,result){
-            dom.css({
-                '-webkit-transform':'translate3d(' + result + 'px,0,0)',
-                'transform':'translate3d(' + result + 'px,0,0)'
-            });
+            if(opts.axisX){
+                dom.css({
+                    '-webkit-transform':'translate3d(' + result + 'px,0,0)',
+                    'transform':'translate3d(' + result + 'px,0,0)'
+                });
+            }else{
+                dom.css({
+                    '-webkit-transform':'translate3d(0,' + result + 'px,0)',
+                    'transform':'translate3d(0,' + result + 'px,0)'
+                });
+            }
         }
 
         // 懒加载图片
         function fnLazyLoad(index){
             if(opts.lazyLoad){
-                var $thisImg = opts.ul.find('img').eq(index);
-                if($thisImg.attr('data-src')){
-                    $thisImg.attr('src',$thisImg.attr('data-src')).removeAttr('data-src');
+                var $img = opts.ul.find('[data-src]');
+                if($img.length > 0){
+                    var $thisImg = $img.eq(index);
+                    if($thisImg.data('src')){
+                        if($thisImg.is('img')){
+                            $thisImg.attr('src',$thisImg.data('src')).data('src','');
+                        }else{
+                            $thisImg.css({'background-image':'url('+$thisImg.data('src')+')'}).data('src','');
+                        }
+                    }
                 }
             }
         }
@@ -102,89 +143,136 @@
         // touchstart
         function fnTouchstart(e){
             _startX = e.touches[0].pageX;
+            _startY = e.touches[0].pageY;
         }
 
         // touchmove
         function fnTouchmove(e){
             e.preventDefault();
             if(opts.autoSwipe){
-                clearInterval(autoSwipe);
+                clearInterval(autoScroll);
             }
             _curX = e.touches[0].pageX;
+            _curY = e.touches[0].pageY;
             _moveX = _curX - _startX;
+            _moveY = _curY - _startY;
             fnTransition(opts.ul,0);
-            fnTranslate(opts.ul,-(_liWidth * (parseInt(_index)) - _moveX));
+            if(opts.axisX){
+                if(!opts.continuousScroll){
+                    if(_index == 0 && _moveX > 0){
+                        _moveX = 0;
+                        return fnAutoSwipe();
+                    }else if((_index + 1) >= _liLength && _moveX < 0){
+                        _moveX = 0;
+                        return fnAutoSwipe();
+                    }
+                }
+                fnTranslate(opts.ul,-(_liWidth * (parseInt(_index)) - _moveX));
+            }else{
+                if(!opts.continuousScroll){
+                    if(_index == 0 && _moveY > 0){
+                        _moveY = 0;
+                        return fnAutoSwipe();
+                    }else if((_index + 1) >= _liLength && _moveY < 0){
+                        _moveY = 0;
+                        return fnAutoSwipe();
+                    }
+                }
+                fnTranslate(opts.ul,-(_liHeight * (parseInt(_index)) - _moveY));
+            }
         }
 
         // touchend
         function fnTouchend(){
+            if(opts.axisX){
+                _moveDistance = _moveX;
+            }else{
+                _moveDistance = _moveY;
+            }
             // 距离小
-            if(Math.abs(_moveX) <= _touchDistance){
+            if(Math.abs(_moveDistance) <= _touchDistance){
                 fnScroll(.3);
             // 距离大
             }else{
-                // 手指触摸向右滚动
-                if(_moveX > _touchDistance){
-                    fnMoveRight();
+                // 手指触摸上一屏滚动
+                if(_moveDistance > _touchDistance){
+                    fnMovePrev();
                     fnAutoSwipe();
-                // 手指触摸向左滚动
-                }else if(_moveX < -_touchDistance){
-                    fnMoveLeft();
+                // 手指触摸下一屏滚动
+                }else if(_moveDistance < -_touchDistance){
+                    fnMoveNext();
                     fnAutoSwipe();
                 }
             }
-            _moveX = 0;
+            _moveX = 0,_moveY = 0;
         }
 
         // 滚动方法
         function fnScroll(num){
             fnTransition(opts.ul,num);
-            fnTranslate(opts.ul,-_index*_liWidth);
+            if(opts.axisX){
+                fnTranslate(opts.ul,-_index*_liWidth);
+            }else{
+                fnTranslate(opts.ul,-_index*_liHeight);
+            }
         }
 
         // 滚动判断
         function fnMove(){
-            if(_index >= _liLength){
-                fnScroll(.3);
-                _index = 0;
-                setTimeout(function(){
-                    fnScroll(0);
-                },300);
-            }else if(_index < 0){
-                fnScroll(.3);
-                _index = _liLength-1;
-                setTimeout(function(){
-                    fnScroll(0);
-                },300);
+            if(opts.continuousScroll){
+                if(_index >= _liLength){
+                    fnScroll(.3);
+                    _index = 0;
+                    setTimeout(function(){
+                        fnScroll(0);
+                    },300);
+                }else if(_index < 0){
+                    fnScroll(.3);
+                    _index = _liLength-1;
+                    setTimeout(function(){
+                        fnScroll(0);
+                    },300);
+                }else{
+                    fnScroll(.3);
+                }
             }else{
+                if(_index >= _liLength){
+                    _index = 0;
+                }else if(_index < 0){
+                    _index = _liLength-1;
+                }
                 fnScroll(.3);
             }
             callback(_index);
         }
 
-        // 向左滚动
-        function fnMoveLeft(){
+        // 下一屏滚动
+        function fnMoveNext(){
             _index++;
             fnMove();
             if(opts.lazyLoad){
-                fnLazyLoad(_index+2);
+                if(opts.continuousScroll){
+                    fnLazyLoad(_index+2);
+                }else{
+                    fnLazyLoad(_index+1);
+                }
             }
         }
 
-        // 向右滚动
-        function fnMoveRight(){
+        // 上一屏滚动
+        function fnMovePrev(){
             _index--;
             fnMove();
             // 第一次往右滚动懒加载图片
-            if(firstScrollRight && opts.lazyLoad){
+            if(firstMovePrev && opts.lazyLoad){
                 var i = _liLength-1;
                 for(i; i <= (_liLength+1); i++){
                     fnLazyLoad(i);
                 }
-                firstScrollRight = false;
+                firstMovePrev = false;
                 return;
             }
-            if(!firstScrollRight && opts.lazyLoad){
+            if(!firstMovePrev && opts.lazyLoad){
                 fnLazyLoad(_index);
             }
         }
@@ -192,8 +280,8 @@
         // 自动滚动
         function fnAutoSwipe(){
             if(opts.autoSwipe){
-                autoSwipe = setInterval(function(){
-                    fnMoveLeft();
+                autoScroll = setInterval(function(){
+                    fnMoveNext();
                 },opts.speed);
             }
         };
