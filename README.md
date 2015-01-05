@@ -11,6 +11,10 @@
 ![扫一扫](website-text.png)
 [DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
 
+### v2.1:
+
+* 支持Windows Phone
+
 ### v2.0:
 
 * 支持选择连续滚动
