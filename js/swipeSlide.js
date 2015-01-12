@@ -61,6 +61,24 @@
 
         // 初始化
         (function(){
+            // 懒加载图片
+            if(opts.lazyLoad){
+                var i = 0;
+                if(opts.continuousScroll){
+                    _loadPicNum = 3;
+                }else{
+                    _loadPicNum = 2;
+                }
+                for(i; i < _loadPicNum; i++){
+                    fnLazyLoad(i);
+                }
+            }
+
+            // 如果轮播小于等于1个，跳出
+            if(_liLength <= 1){
+                return false;
+            }
+
             // IE触控
             if(browser.ie10 || browser.ie11){
                 var action = '';
@@ -81,19 +99,6 @@
                 }else{
                     fnTranslate(opts.ul.children().first(),_liHeight*-1);
                     fnTranslate(opts.ul.children().last(),_liHeight*_liLength);
-                }
-            }
-
-            // 懒加载图片
-            if(opts.lazyLoad){
-                var i = 0;
-                if(opts.continuousScroll){
-                    _loadPicNum = 3;
-                }else{
-                    _loadPicNum = 2;
-                }
-                for(i; i < _loadPicNum; i++){
-                    fnLazyLoad(i);
                 }
             }
 
@@ -329,7 +334,7 @@
         
         // 自动滚动
         function fnAutoSwipe(){
-            if(opts.autoSwipe && _liLength > 1){
+            if(opts.autoSwipe){
                 autoScroll = setInterval(function(){
                     fnMoveNext();
                 },opts.speed);
