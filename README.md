@@ -11,6 +11,11 @@
 ![扫一扫](website-text.png)
 [DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
 
+### v2.2:
+
+* 修复Chrome模拟器touch变鼠标后js报错
+* 修复只有1个轮播时禁止自动切换
+
 ### v2.1:
 
 * 支持Windows Phone

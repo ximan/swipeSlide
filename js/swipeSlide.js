@@ -1,7 +1,7 @@
 /**
  * Zepto swipeSlide Plugin
  * 西门 http://ons.me/500.html
- * 20150105 v2.1
+ * 20150112 v2.2
  */
 
 ;(function($){
@@ -27,7 +27,7 @@
                 ie10 : window.navigator.msPointerEnabled,
                 ie11 : window.navigator.pointerEnabled
             },
-            events = [],
+            events = ['touchstart','touchmove','touchend'],
             support = {
                 touch : (window.Modernizr && Modernizr.touch === true) || (function () {
                     return !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
@@ -54,9 +54,9 @@
 
         // 触摸赋值
         var touchEvents = {
-            touchStart : support.touch ? 'touchstart' : events[0],
-            touchMove : support.touch ? 'touchmove' : events[1],
-            touchEnd : support.touch ? 'touchend' : events[2]
+            touchStart : events[0],
+            touchMove : events[1],
+            touchEnd : events[2]
         };
 
         // 初始化
@@ -329,11 +329,11 @@
         
         // 自动滚动
         function fnAutoSwipe(){
-            if(opts.autoSwipe){
+            if(opts.autoSwipe && _liLength > 1){
                 autoScroll = setInterval(function(){
                     fnMoveNext();
                 },opts.speed);
             }
-        };
+        }
     }
 })(window.Zepto || window.jQuery);
