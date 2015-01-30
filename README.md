@@ -11,6 +11,10 @@
 ![扫一扫](website-text.png)
 [DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
 
+### v2.2.1:
+
+* 优化懒加载时js阻塞导致轮播图片无法显示
+
 ### v2.2:
 
 * 修复Chrome模拟器touch变鼠标后js报错

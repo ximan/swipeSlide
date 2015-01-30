@@ -1,7 +1,7 @@
 /**
  * Zepto swipeSlide Plugin
  * 西门 http://ons.me/500.html
- * 20150112 v2.2
+ * 20150130 v2.2.1
  */
 
 ;(function($){
@@ -61,6 +61,24 @@
 
         // 初始化
         (function(){
+            // 如果轮播小于等于1个，跳出
+            if(_liLength <= 1){
+                fnLazyLoad(0);
+                return false;
+            }
+
+            // 连续滚动，需要复制dom
+            if(opts.continuousScroll){
+                opts.ul.prepend(opts.li.last().clone()).append(opts.li.first().clone());
+                if(opts.axisX){
+                    fnTranslate(opts.ul.children().first(),_liWidth*-1);
+                    fnTranslate(opts.ul.children().last(),_liWidth*_liLength);
+                }else{
+                    fnTranslate(opts.ul.children().first(),_liHeight*-1);
+                    fnTranslate(opts.ul.children().last(),_liHeight*_liLength);
+                }
+            }
+
             // 懒加载图片
             if(opts.lazyLoad){
                 var i = 0;
@@ -74,11 +92,6 @@
                 }
             }
 
-            // 如果轮播小于等于1个，跳出
-            if(_liLength <= 1){
-                return false;
-            }
-
             // IE触控
             if(browser.ie10 || browser.ie11){
                 var action = '';
@@ -88,18 +101,6 @@
                     action = 'none';
                 }
                 $this.css({'-ms-touch-action':action,'touch-action':action});
-            }
-
-            // 连续滚动，需要复制dom
-            if(opts.continuousScroll){
-                opts.ul.prepend(opts.li.last().clone()).append(opts.li.first().clone());
-                if(opts.axisX){
-                    fnTranslate(opts.ul.children().first(),_liWidth*-1);
-                    fnTranslate(opts.ul.children().last(),_liWidth*_liLength);
-                }else{
-                    fnTranslate(opts.ul.children().first(),_liHeight*-1);
-                    fnTranslate(opts.ul.children().last(),_liHeight*_liLength);
-                }
             }
 
             // 给初始图片定位
@@ -163,15 +164,15 @@
         // 懒加载图片
         function fnLazyLoad(index){
             if(opts.lazyLoad){
-                var $img = opts.ul.find('[data-src]');
-                if($img.length > 0){
-                    var $thisImg = $img.eq(index);
-                    if($thisImg.data('src')){
-                        if($thisImg.is('img')){
-                            $thisImg.attr('src',$thisImg.data('src')).data('src','');
-                        }else{
-                            $thisImg.css({'background-image':'url('+$thisImg.data('src')+')'}).data('src','');
-                        }
+                var $li = opts.ul.children();
+                var $thisImg = $li.eq(index).find('[data-src]');
+                if($thisImg){
+                    if($thisImg.is('img')){
+                        $thisImg.attr('src',$thisImg.data('src'));
+                        $thisImg.removeAttr('data-src');
+                    }else{
+                        $thisImg.css({'background-image':'url('+$thisImg.data('src')+')'});
+                        $thisImg.removeAttr('data-src');
                     }
                 }
             }
