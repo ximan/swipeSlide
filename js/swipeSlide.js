@@ -1,345 +1,310 @@
 /**
- * Zepto swipeSlide Plugin
- * 西门 http://ons.me/500.html
- * 20150130 v2.2.1
+ * swipeSlide
+ * http://ons.me/500.html
+ * 西门
+ * 3.0(150227)
  */
-
-;(function($){
+;(function(win,$){
     'use strict';
-    $.fn.swipeSlide = function(options,callback){
-        var _index = 0,
-            _startX = 0,
-            _startY = 0,
-            _moveX = 0,
-            _moveY = 0,
-            _moveResultX = 0,
-            _moveResultY = 0,
-            _moveDistance = 0,
-            _curX = 0,
-            _curY = 0,
-            autoScroll,
-            _touchDistance = 50,
-            _loadPicNum = 0,
-            firstMovePrev = true,
-            allowSlideClick = true,
-            $this = $(this),
-            browser = {
-                ie10 : window.navigator.msPointerEnabled,
-                ie11 : window.navigator.pointerEnabled
-            },
-            events = ['touchstart','touchmove','touchend'],
-            support = {
-                touch : (window.Modernizr && Modernizr.touch === true) || (function () {
-                    return !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
-                })()
-            },
-            opts = $.extend({}, {
-                ul : $this.children('ul'),              // 父dom
-                li : $this.children().children('li'),   // 子dom
-                continuousScroll : false,               // 连续滚动
-                autoSwipe : true,                       // 自动切换
-                speed : 4000,                           // 切换速度
-                axisX : true,                           // X轴
-                transitionType : 'ease',                // 过渡类型
-                lazyLoad : false                        // 懒加载
-            }, options || {}),
-            _liWidth = opts.li.width(),
-            _liHeight = opts.li.height(),
-            _liLength = opts.li.length,
-            callback = callback || function(){};
+    
+    // 判断IE
+    var browser = {
+        ie10 : win.navigator.msPointerEnabled,
+        ie11 : win.navigator.pointerEnabled
+    };
+    // 触摸事件
+    var events = ['touchstart','touchmove','touchend'];
+    // 检测
+    var support = {
+        // 触摸
+        touch : (win.Modernizr && Modernizr.touch === true) || (function () {
+            return !!(('ontouchstart' in win) || win.DocumentTouch && document instanceof DocumentTouch);
+        })()
+    };
 
-        // 判断浏览器
-        if (browser.ie10) events = ['MSPointerDown', 'MSPointerMove', 'MSPointerUp'];
-        if (browser.ie11) events = ['pointerdown', 'pointermove', 'pointerup'];
+    // 判断浏览器
+    if (browser.ie10) events = ['MSPointerDown', 'MSPointerMove', 'MSPointerUp'];
+    if (browser.ie11) events = ['pointerdown', 'pointermove', 'pointerup'];
 
-        // 触摸赋值
-        var touchEvents = {
-            touchStart : events[0],
-            touchMove : events[1],
-            touchEnd : events[2]
-        };
+    // 触摸赋值
+    var touchEvents = {
+        touchStart : events[0],
+        touchMove : events[1],
+        touchEnd : events[2]
+    };
 
-        // 初始化
-        (function(){
-            // 如果轮播小于等于1个，跳出
-            if(_liLength <= 1){
-                fnLazyLoad(0);
-                return false;
-            }
+    // 绑定swipeSlide
+    $.fn.swipeSlide = function(options){
+        new sS(this, options);
+    };
+    var sS = function(element, options){
+        var me = this;
+        me.$el = $(element);
+        me._index = 0;
+        me._distance = 50;
+        me.allowSlideClick = true;
+        me.init(options);
+    };
 
-            // 连续滚动，需要复制dom
-            if(opts.continuousScroll){
-                opts.ul.prepend(opts.li.last().clone()).append(opts.li.first().clone());
-                if(opts.axisX){
-                    fnTranslate(opts.ul.children().first(),_liWidth*-1);
-                    fnTranslate(opts.ul.children().last(),_liWidth*_liLength);
-                }else{
-                    fnTranslate(opts.ul.children().first(),_liHeight*-1);
-                    fnTranslate(opts.ul.children().last(),_liHeight*_liLength);
-                }
-            }
+    // 初始化
+    sS.prototype.init = function(options){
+        var me = this;
+        me.opts = $.extend({}, {
+            ul : me.$el.children('ul'),              // 父dom
+            li : me.$el.children().children('li'),   // 子dom
+            continuousScroll : false,               // 连续滚动
+            autoSwipe : true,                       // 自动切换
+            speed : 4000,                           // 切换速度
+            axisX : true,                           // X轴
+            transitionType : 'ease',                // 过渡类型
+            lazyLoad : false,                       // 懒加载
+            callback : function(){}               // 回调方法
+        }, options);
+        // 轮播数量
+        me._liLength = me.opts.li.length;
 
-            // 懒加载图片
-            if(opts.lazyLoad){
-                var i = 0;
-                if(opts.continuousScroll){
-                    _loadPicNum = 3;
-                }else{
-                    _loadPicNum = 2;
-                }
-                for(i; i < _loadPicNum; i++){
-                    fnLazyLoad(i);
-                }
-            }
-
-            // IE触控
-            if(browser.ie10 || browser.ie11){
-                var action = '';
-                if(opts.axisX){
-                    action = 'pan-y';
-                }else{
-                    action = 'none';
-                }
-                $this.css({'-ms-touch-action':action,'touch-action':action});
-            }
-
-            // 给初始图片定位
-            if(opts.axisX){
-                opts.li.each(function(i){
-                    fnTranslate($(this),_liWidth*i);
-                });
-            }else{
-                opts.li.each(function(i){
-                    fnTranslate($(this),_liHeight*i);
-                });
-            }
-
-            // 自动滚动
-            fnAutoSwipe();
-
-            // 回调
-            callback(_index);
-
-            $this.on('click',function(){
-                return allowSlideClick;
-            });
-
-            // 绑定触摸
-            $this.on(touchEvents.touchStart,function(e){
-                fnTouches(e);
-                fnTouchstart(e);
-            });
-            $this.on(touchEvents.touchMove,function(e){
-                fnTouches(e);
-                fnTouchmove(e);
-            });
-            $this.on(touchEvents.touchEnd,function(){
-                fnTouchend();
-            });
-        })();
-
-        // css过渡
-        function fnTransition(dom,num){
-            dom.css({
-                '-webkit-transition':'all '+num+'s '+opts.transitionType,
-                'transition':'all '+num+'s '+opts.transitionType
-            });
-        }
-
-        // css滚动
-        function fnTranslate(dom,result){
-            if(opts.axisX){
-                dom.css({
-                    '-webkit-transform':'translate3d(' + result + 'px,0,0)',
-                    'transform':'translate3d(' + result + 'px,0,0)'
-                });
-            }else{
-                dom.css({
-                    '-webkit-transform':'translate3d(0,' + result + 'px,0)',
-                    'transform':'translate3d(0,' + result + 'px,0)'
-                });
-            }
-        }
+        // 如果轮播小于等于1个，跳出
+        if(me._liLength <= 1) return false;
 
         // 懒加载图片
-        function fnLazyLoad(index){
-            if(opts.lazyLoad){
-                var $li = opts.ul.children();
-                var $thisImg = $li.eq(index).find('[data-src]');
-                if($thisImg){
-                    if($thisImg.is('img')){
-                        $thisImg.attr('src',$thisImg.data('src'));
-                        $thisImg.removeAttr('data-src');
-                    }else{
-                        $thisImg.css({'background-image':'url('+$thisImg.data('src')+')'});
-                        $thisImg.removeAttr('data-src');
-                    }
-                }
-            }
+        if(me.opts.lazyLoad){
+            fnLazyLoad(me, '0');
+            fnLazyLoad(me, '1');
+            // 加载最后一屏，为了连续滚动复制dom
+            if(me.opts.continuousScroll) fnLazyLoad(me, me._liLength-1);
         }
 
-        // touches
-        function fnTouches(e){
-            if(support.touch && !e.touches){
-                e.touches = e.originalEvent.touches;
-            }
-        }
+        // 连续滚动，复制dom
+        if(me.opts.continuousScroll) me.opts.ul.prepend(me.opts.li.last().clone()).append(me.opts.li.first().clone());
 
-        // touchstart
-        function fnTouchstart(e){
-            _startX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
-            _startY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
-        }
+        // 轮播的宽度
+        fnGetSlideDistance();
 
-        // touchmove
-        function fnTouchmove(e){
-            if (e.preventDefault) e.preventDefault();
-            else e.returnValue = false;
-            if(opts.autoSwipe){
-                clearInterval(autoScroll);
-            }
-            allowSlideClick = false;
-            _curX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
-            _curY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
-            _moveX = _moveResultX = _curX - _startX;
-            _moveY = _moveResultY = _curY - _startY;
-            fnTransition(opts.ul,0);
-            if(opts.axisX){
-                if(!opts.continuousScroll){
-                    if(_index == 0 && _moveResultX > 0){
-                        _moveResultX = 0;
-                        return fnAutoSwipe();
-                    }else if((_index + 1) >= _liLength && _moveResultX < 0){
-                        _moveResultX = 0;
-                        return fnAutoSwipe();
-                    }
-                }
-                fnTranslate(opts.ul,-(_liWidth * (parseInt(_index)) - _moveResultX));
+        if(browser.ie10 || browser.ie11){
+            // IE触控
+            var action = '';
+            if(me.opts.axisX){
+                action = 'pan-y';
             }else{
-                if(!opts.continuousScroll){
-                    if(_index == 0 && _moveResultY > 0){
-                        _moveResultY = 0;
-                        return fnAutoSwipe();
-                    }else if((_index + 1) >= _liLength && _moveResultY < 0){
-                        _moveResultY = 0;
-                        return fnAutoSwipe();
-                    }
-                }
-                fnTranslate(opts.ul,-(_liHeight * (parseInt(_index)) - _moveResultY));
+                action = 'none';
             }
-        }
-
-        // touchend
-        function fnTouchend(){
-            if(opts.axisX){
-                _moveDistance = _moveResultX;
-            }else{
-                _moveDistance = _moveResultY;
-            }
+            me.$el.css({'-ms-touch-action':action,'touch-action':action});
 
             // 解决IE滑动触发click
-            if(Math.abs(_moveX) < 5){
-                allowSlideClick = true;
-            }
-            setTimeout(function(){
-                allowSlideClick = true;
-            },100);
-
-            // 距离小
-            if(Math.abs(_moveDistance) <= _touchDistance){
-                fnScroll(.3);
-            // 距离大
-            }else{
-                // 手指触摸上一屏滚动
-                if(_moveDistance > _touchDistance){
-                    fnMovePrev();
-                    fnAutoSwipe();
-                // 手指触摸下一屏滚动
-                }else if(_moveDistance < -_touchDistance){
-                    fnMoveNext();
-                    fnAutoSwipe();
-                }
-            }
-            _moveX = _moveResultX = 0,_moveY = _moveResultY = 0;
+            me.$el.on('click',function(){
+                return me.allowSlideClick;
+            });
         }
 
-        // 滚动方法
-        function fnScroll(num){
-            fnTransition(opts.ul,num);
-            if(opts.axisX){
-                fnTranslate(opts.ul,-_index*_liWidth);
-            }else{
-                fnTranslate(opts.ul,-_index*_liHeight);
-            }
-        }
+        // 调用轮播
+        me.fnAutoSlide();
 
-        // 滚动判断
-        function fnMove(){
-            if(opts.continuousScroll){
-                if(_index >= _liLength){
-                    fnScroll(.3);
-                    _index = 0;
-                    setTimeout(function(){
-                        fnScroll(0);
-                    },300);
-                }else if(_index < 0){
-                    fnScroll(.3);
-                    _index = _liLength-1;
-                    setTimeout(function(){
-                        fnScroll(0);
-                    },300);
-                }else{
-                    fnScroll(.3);
-                }
-            }else{
-                if(_index >= _liLength){
-                    _index = 0;
-                }else if(_index < 0){
-                    _index = _liLength-1;
-                }
-                fnScroll(.3);
-            }
-            callback(_index);
-        }
+        // 回调
+        me.opts.callback(me._index);
 
-        // 下一屏滚动
-        function fnMoveNext(){
-            _index++;
-            fnMove();
-            if(opts.lazyLoad){
-                if(opts.continuousScroll){
-                    fnLazyLoad(_index+2);
-                }else{
-                    fnLazyLoad(_index+1);
-                }
-            }
-        }
+        // 绑定触摸
+        me.$el.on(touchEvents.touchStart,function(e){
+            fnTouches(e);
+            fnTouchstart(e, me);
+        });
+        me.$el.on(touchEvents.touchMove,function(e){
+            fnTouches(e);
+            fnTouchmove(e, me);
+        });
+        me.$el.on(touchEvents.touchEnd,function(){
+            fnTouchend(me);
+        });
 
-        // 上一屏滚动
-        function fnMovePrev(){
-            _index--;
-            fnMove();
-            // 第一次往右滚动懒加载图片
-            if(firstMovePrev && opts.lazyLoad){
-                var i = _liLength-1;
-                for(i; i <= (_liLength+1); i++){
-                    fnLazyLoad(i);
-                }
-                firstMovePrev = false;
-                return;
-            }
-            if(!firstMovePrev && opts.lazyLoad){
-                fnLazyLoad(_index);
-            }
-        }
+        // 横竖屏、窗口调整
+        $(win).on('onorientationchange' in win ? 'orientationchange' : 'resize',function(){
+            clearTimeout(me.timer);
+            me.timer = setTimeout(fnGetSlideDistance,150);
+        });
         
-        // 自动滚动
-        function fnAutoSwipe(){
-            if(opts.autoSwipe){
-                autoScroll = setInterval(function(){
-                    fnMoveNext();
-                },opts.speed);
+        // 获取轮播宽度
+        function fnGetSlideDistance(){
+            var $li = me.opts.ul.children();
+            me._slideDistance = me.opts.axisX ? me.opts.li.width() : me.opts.li.height();
+            // 定位
+            fnTransition(me, me.opts.ul, 0);
+            fnTranslate(me, me.opts.ul, -me._slideDistance*me._index);
+            fnTransition(me, $li, 0);
+            var num = me.opts.continuousScroll ? -1 : 0;
+            $li.each(function(i){
+                fnTranslate(me, $(this), me._slideDistance*(i+num));
+            });
+        }
+    };
+
+    // css过渡
+    function fnTransition(me, dom, num){
+        dom.css({
+            '-webkit-transition':'all '+num+'s '+me.opts.transitionType,
+            'transition':'all '+num+'s '+me.opts.transitionType
+        });
+    }
+
+    // css位移
+    function fnTranslate(me, dom, distance){
+        var result = me.opts.axisX ? distance+'px,0,0' : '0,'+distance+'px,0';
+        dom.css({
+            '-webkit-transform':'translate3d('+result+')',
+            'transform':'translate3d('+result+')'
+        });
+    }
+
+    // 懒加载图片
+    function fnLazyLoad(me, index){
+        var $li = me.opts.ul.children();
+        var $thisImg = $li.eq(index).find('[data-src]');
+        if($thisImg){
+            if($thisImg.is('img')){
+                $thisImg.attr('src',$thisImg.data('src'));
+                $thisImg.removeAttr('data-src');
+            }else{
+                $thisImg.css({'background-image':'url('+$thisImg.data('src')+')'});
+                $thisImg.removeAttr('data-src');
             }
         }
     }
-})(window.Zepto || window.jQuery);
+
+    // touches
+    function fnTouches(e){
+        if(support.touch && !e.touches){
+            e.touches = e.originalEvent.touches;
+        }
+    }
+
+    // touchstart
+    function fnTouchstart(e, me){
+        // 按下时的坐标
+        me._startX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
+        me._startY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
+    }
+
+    // touchmove
+    function fnTouchmove(e, me){
+        if (e.preventDefault) e.preventDefault();
+        else e.returnValue = false;
+        // 如果自动切换，move的时候清除autoSlide自动轮播方法
+        if(me.opts.autoSwipe) clearInterval(me.autoSlide);
+        me.allowSlideClick = false;
+        // 触摸时的坐标
+        me._curX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
+        me._curY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
+        // 触摸时的距离
+        me._moveX = me._moveX_ie = me._curX - me._startX;
+        me._moveY = me._moveY_ie = me._curY - me._startY;
+
+        // 触摸时跟手
+        fnTransition(me, me.opts.ul, 0);
+        // 距离
+        me._moveDistance = me._moveDistanceIE = me.opts.axisX ? me._moveX : me._moveY;
+        if(!me.opts.continuousScroll){
+            // 如果是第一屏，并且往下滚动，就不让滚动 || 如果是最后一屏，并且往上滚动，就不让滚动
+            if(me._index == 0 && me._moveDistance > 0 || (me._index + 1) >= me._liLength && me._moveDistance < 0){
+                me._moveDistance = 0;
+            }
+        }
+        // 触摸时跟手滚动
+        fnTranslate(me, me.opts.ul, -(me._slideDistance * me._index - me._moveDistance));
+    }
+
+    // touchend
+    function fnTouchend(me){
+        if(browser.ie10 || browser.ie11){
+            // 解决IE滑动触发click
+            if(Math.abs(me._moveDistanceIE) < 5){
+                me.allowSlideClick = true;
+            }
+            setTimeout(function(){
+                me.allowSlideClick = true;
+            },100);
+        }
+
+        // 距离小
+        if(Math.abs(me._moveDistance) <= me._distance){
+            fnSlide(me, '', '.3');
+        // 距离大
+        }else{
+            // 手指触摸上一屏滚动
+            if(me._moveDistance > me._distance){
+                fnSlide(me, 'prev', '.3');
+            // 手指触摸下一屏滚动
+            }else{
+                fnSlide(me, 'next', '.3');
+            }
+        }
+        me.fnAutoSlide();
+        me._moveDistance = me._moveDistanceIE = 0;
+    }
+
+    // 自动轮播
+    sS.prototype.fnAutoSlide = function(){
+        var me = this;
+        if(me.opts.autoSwipe){
+            me.autoSlide = setInterval(function(){
+                fnSlide(me, 'next', '.3');
+            },me.opts.speed);
+        }
+    };
+
+    // 轮播方法
+    function fnSlide(me, direction, num){
+        // 判断方向
+        if(direction == 'next'){
+            me._index++;
+            if(me.opts.lazyLoad){
+                // 因为连续滚动，复制dom，所以要多加1
+                if(me.opts.continuousScroll){
+                    fnLazyLoad(me, me._index+2);
+                }else{
+                    fnLazyLoad(me, me._index+1);
+                }
+            }
+        }else if(direction == 'prev'){
+            me._index--;
+            // 往上滚动比较特殊，只有连续滚动&&懒加载时才有
+            if(me.opts.lazyLoad && me.opts.continuousScroll){
+                if(me._index < 0){
+                    fnLazyLoad(me, me._liLength-1);
+                }else{
+                    fnLazyLoad(me, me._index);
+                }
+            }
+        }
+        // 如果是连续滚动
+        if(me.opts.continuousScroll){
+            if(me._index >= me._liLength){
+                fnScroll(me, num);
+                me._index = 0;
+                setTimeout(function(){
+                    fnScroll(me, 0);
+                },300);
+            }else if(me._index < 0){
+                fnScroll(me, num);
+                me._index = me._liLength-1;
+                setTimeout(function(){
+                    fnScroll(me, 0);
+                },300);
+            }else{
+                fnScroll(me, num);
+            }
+        }else{
+            if(me._index >= me._liLength){
+                me._index = 0;
+            }else if(me._index < 0){
+                me._index = me._liLength-1;
+            }
+            fnScroll(me, num);
+        }
+        me.opts.callback(me._index);
+    }
+
+    // 轮播动作
+    function fnScroll(me, num){
+        fnTransition(me, me.opts.ul, num);
+        fnTranslate(me, me.opts.ul, -me._index*me._slideDistance);
+    }
+
+})(window, window.Zepto || window.jQuery);

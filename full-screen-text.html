@@ -1,8 +1,8 @@
 <!doctype html>
+<html lang="zh-cn">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, user-scalable=0" charset="UTF-8">
     <title>swipeSlide</title>
-    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui">
 <style>
 *{
     margin: 0;
@@ -114,9 +114,10 @@ html,body{
 <script>
 $(function(){
     $('.full').swipeSlide({
-        autoSwipe:false
-    },function(i){
-        $('.full li').eq(i).addClass('cur').siblings().removeClass('cur');
+        autoSwipe:false,
+        callback:function(i){
+            $('.full li').eq(i).addClass('cur').siblings().removeClass('cur');
+        }
     });
 });
 </script>
