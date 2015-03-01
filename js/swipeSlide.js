@@ -221,6 +221,16 @@
                 me.allowSlideClick = true;
             },100);
         }
+        
+        //添加反弹效果
+        if(!me.opts.continuousScroll){
+            // 如果是第一屏或者最后一屏
+            if(me._index == 0 && me._moveDistance > 0 || (me._index + 1) >= me._liLength && me._moveDistance < 0){
+                fnScroll(me, 0);
+
+                return ;
+            }
+        }
 
         // 距离小
         if(Math.abs(me._moveDistance) <= me._distance){
