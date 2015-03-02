@@ -58,13 +58,14 @@
             axisX : true,                           // X轴
             transitionType : 'ease',                // 过渡类型
             lazyLoad : false,                       // 懒加载
+            springback : true,                      // 回弹效果
             callback : function(){}               // 回调方法
         }, options);
         // 轮播数量
         me._liLength = me.opts.li.length;
 
         // 如果轮播小于等于1个，跳出
-        if(me._liLength <= 1) return false;
+        //if(me._liLength <= 1) return false;
 
         // 懒加载图片
         if(me.opts.lazyLoad){
@@ -203,7 +204,7 @@
         if(!me.opts.continuousScroll){
             // 如果是第一屏，并且往下滚动，就不让滚动 || 如果是最后一屏，并且往上滚动，就不让滚动
             if(me._index == 0 && me._moveDistance > 0 || (me._index + 1) >= me._liLength && me._moveDistance < 0){
-                me._moveDistance = 0;
+                if(!me.opts.springback) me._moveDistance = 0;
             }
         }
         // 触摸时跟手滚动
@@ -220,6 +221,16 @@
             setTimeout(function(){
                 me.allowSlideClick = true;
             },100);
+        }
+
+        //回弹效果
+        if(!me.opts.continuousScroll && me.opts.springback){
+            // 如果是第一屏或者最后一屏
+            if(me._index == 0 && me._moveDistance > 0 || (me._index + 1) >= me._liLength && me._moveDistance < 0){
+                fnScroll(me, 0);
+
+                return ;
+            }
         }
 
         // 距离小
