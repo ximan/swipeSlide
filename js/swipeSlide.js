@@ -226,7 +226,7 @@
         if(!me.opts.continuousScroll){
             // 如果是第一屏或者最后一屏
             if(me._index == 0 && me._moveDistance > 0 || (me._index + 1) >= me._liLength && me._moveDistance < 0){
-                fnScroll(me, 0);
+                fnScroll(me, 0.5);
 
                 return ;
             }
