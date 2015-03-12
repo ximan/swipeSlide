@@ -253,6 +253,10 @@
     sS.prototype.fnAutoSlide = function(){
         var me = this;
         if(me.opts.autoSwipe){
+            //修复定时器没清空BUG
+            if(me.autoSlide){
+                clearInterval(me.autoSlide);
+            }
             me.autoSlide = setInterval(function(){
                 fnSlide(me, 'next', '.3');
             },me.opts.speed);
