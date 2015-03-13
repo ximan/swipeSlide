@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.0(150227)
+ * 3.1.0(150313)
  */
 ;(function(win,$){
     'use strict';
@@ -35,7 +35,7 @@
 
     // 绑定swipeSlide
     $.fn.swipeSlide = function(options){
-        new sS(this, options);
+        return new sS(this, options);
     };
     var sS = function(element, options){
         var me = this;
@@ -158,13 +158,16 @@
         var $li = me.opts.ul.children();
         var $thisImg = $li.eq(index).find('[data-src]');
         if($thisImg){
-            if($thisImg.is('img')){
-                $thisImg.attr('src',$thisImg.data('src'));
-                $thisImg.removeAttr('data-src');
-            }else{
-                $thisImg.css({'background-image':'url('+$thisImg.data('src')+')'});
-                $thisImg.removeAttr('data-src');
-            }
+            $thisImg.each(function(i){
+                var $this = $(this);
+                if($this.is('img')){
+                    $this.attr('src',$this.data('src'));
+                    $this.removeAttr('data-src');
+                }else{
+                    $this.css({'background-image':'url('+$this.data('src')+')'});
+                    $this.removeAttr('data-src');
+                }
+            });
         }
     }
 
@@ -235,7 +238,6 @@
                 fnSlide(me, 'next', '.3');
             }
         }
-        me.fnAutoSlide();
         me._moveDistance = me._moveDistanceIE = 0;
     }
 
@@ -249,27 +251,51 @@
         }
     };
 
+    // 指定轮播
+    sS.prototype.goTo = function(i){
+        var me = this;
+        fnSlide(me, i, '.3');
+    };
+
     // 轮播方法
-    function fnSlide(me, direction, num){
+    function fnSlide(me, go, num){
         // 判断方向
-        if(direction == 'next'){
-            me._index++;
+        if(typeof go === 'number'){
+            me._index = go;
+            // 加载当前屏、前一屏、后一屏
             if(me.opts.lazyLoad){
                 // 因为连续滚动，复制dom，所以要多加1
+                if(me.opts.continuousScroll){
+                    fnLazyLoad(me, me._index);
+                    fnLazyLoad(me, me._index+1);
+                    fnLazyLoad(me, me._index+2);
+                }else{
+                    fnLazyLoad(me, me._index-1);
+                    fnLazyLoad(me, me._index);
+                    fnLazyLoad(me, me._index+1);
+                }
+            }
+        }else if(go == 'next'){
+            me._index++;
+            if(me.opts.lazyLoad){
                 if(me.opts.continuousScroll){
                     fnLazyLoad(me, me._index+2);
                 }else{
                     fnLazyLoad(me, me._index+1);
                 }
             }
-        }else if(direction == 'prev'){
+        }else if(go == 'prev'){
             me._index--;
-            // 往上滚动比较特殊，只有连续滚动&&懒加载时才有
-            if(me.opts.lazyLoad && me.opts.continuousScroll){
+            if(me.opts.lazyLoad){
+                // 往前到最后一屏，加载最后一屏前一屏
                 if(me._index < 0){
                     fnLazyLoad(me, me._liLength-1);
                 }else{
-                    fnLazyLoad(me, me._index);
+                    if(me.opts.continuousScroll){
+                        fnLazyLoad(me, me._index);
+                    }else{
+                        fnLazyLoad(me, me._index-1);
+                    }
                 }
             }
         }
@@ -299,12 +325,15 @@
             fnScroll(me, num);
         }
         me.opts.callback(me._index);
+        me.fnAutoSlide();
     }
 
     // 轮播动作
     function fnScroll(me, num){
         fnTransition(me, me.opts.ul, num);
         fnTranslate(me, me.opts.ul, -me._index*me._slideDistance);
+        // 清除autoSlide自动轮播方法
+        clearInterval(me.autoSlide);
     }
 
 })(window, window.Zepto || window.jQuery);
