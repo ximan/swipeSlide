@@ -15,6 +15,9 @@
 ![扫一扫](website-text.png)
 [DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
 
+![扫一扫](website-switch.png)
+[DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index-switch.html)
+
 ## 依赖
 
 Zepto 或者 jQuery
