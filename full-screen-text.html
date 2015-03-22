@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="zh-cn">
+<!DOCTYPE html>
+<html>
 <head>
     <meta name="viewport" content="initial-scale=1, user-scalable=0" charset="UTF-8">
     <title>swipeSlide</title>
@@ -82,6 +82,51 @@ html,body{
 .full li.cur h1{
     -webkit-transform: translate3d(0, 0, 0);
 }
+.full .arrow{
+    display: none;
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: -15px;
+    font-size: 30px;
+    text-align: center;
+}
+.full .arrow-left{
+    left: 15px;
+    -webkit-animation:arrowLeft 1s ease-out infinite;
+    animation:arrowLeft 1s ease-out infinite;
+}
+.full .arrow-right{
+    right: 15px;
+    -webkit-animation:arrowRight 1s ease-out infinite;
+    animation:arrowRight 1s ease-out infinite;
+}
+@-webkit-keyframes arrowLeft{
+    0%{
+        -webkit-transform:translate3d(0, 0, 0);
+        transform:translate3d(0, 0, 0);
+        opacity:1;
+    }
+    100%{
+        -webkit-transform:translate3d(-50%, 0, 0);
+        transform:translate3d(-50%, 0, 0);
+        opacity:0;
+    }
+}
+@-webkit-keyframes arrowRight{
+    0%{
+        -webkit-transform:translate3d(0, 0, 0);
+        transform:translate3d(0, 0, 0);
+        opacity:1;
+    }
+    100%{
+        -webkit-transform:translate3d(50%, 0, 0);
+        transform:translate3d(50%, 0, 0);
+        opacity:0;
+    }
+}
 </style>
 </head>
 <body>
@@ -106,6 +151,8 @@ html,body{
             <h1>第五个的标题</h1>
         </li>
     </ul>
+    <div class="arrow arrow-left">←</div>
+    <div class="arrow arrow-right">→</div>
 </div>
 
 <script src="js/zepto.min.js"></script>
@@ -115,7 +162,17 @@ html,body{
 $(function(){
     $('.full').swipeSlide({
         autoSwipe:false,
-        callback:function(i){
+        callback:function(i,sum){
+            if(i <= 0){
+                $('.arrow-left').show();
+            }else{
+                $('.arrow-left').hide();
+            }
+            if(i+1 >= sum){
+                $('.arrow-right').show();
+            }else{
+                $('.arrow-right').hide();
+            }
             $('.full li').eq(i).addClass('cur').siblings().removeClass('cur');
         }
     });

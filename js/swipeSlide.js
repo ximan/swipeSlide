@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.1.0(150313)
+ * 3.2.0(150322)
  */
 ;(function(win,$){
     'use strict';
@@ -50,15 +50,15 @@
     sS.prototype.init = function(options){
         var me = this;
         me.opts = $.extend({}, {
-            ul : me.$el.children('ul'),              // 父dom
-            li : me.$el.children().children('li'),   // 子dom
+            ul : me.$el.children('ul'),             // 父dom
+            li : me.$el.children().children('li'),  // 子dom
             continuousScroll : false,               // 连续滚动
             autoSwipe : true,                       // 自动切换
             speed : 4000,                           // 切换速度
             axisX : true,                           // X轴
             transitionType : 'ease',                // 过渡类型
-            lazyLoad : false,                       // 懒加载
-            callback : function(){}               // 回调方法
+            lazyLoad : false,                       // 图片懒加载
+            callback : function(){}                 // 回调方法
         }, options);
         // 轮播数量
         me._liLength = me.opts.li.length;
@@ -97,10 +97,10 @@
         }
 
         // 调用轮播
-        me.fnAutoSlide();
+        fnAutoSlide(me);
 
         // 回调
-        me.opts.callback(me._index);
+        me.opts.callback(me._index,me._liLength);
 
         // 绑定触摸
         me.$el.on(touchEvents.touchStart,function(e){
@@ -242,14 +242,13 @@
     }
 
     // 自动轮播
-    sS.prototype.fnAutoSlide = function(){
-        var me = this;
+    function fnAutoSlide(me){
         if(me.opts.autoSwipe){
             me.autoSlide = setInterval(function(){
                 fnSlide(me, 'next', '.3');
             },me.opts.speed);
         }
-    };
+    }
 
     // 指定轮播
     sS.prototype.goTo = function(i){
@@ -306,12 +305,18 @@
                 me._index = 0;
                 setTimeout(function(){
                     fnScroll(me, 0);
+                    me.opts.callback(me._index,me._liLength);
+                    fnAutoSlide(me);
+                    return;
                 },300);
             }else if(me._index < 0){
                 fnScroll(me, num);
                 me._index = me._liLength-1;
                 setTimeout(function(){
                     fnScroll(me, 0);
+                    me.opts.callback(me._index,me._liLength);
+                    fnAutoSlide(me);
+                    return;
                 },300);
             }else{
                 fnScroll(me, num);
@@ -324,8 +329,8 @@
             }
             fnScroll(me, num);
         }
-        me.opts.callback(me._index);
-        me.fnAutoSlide();
+        me.opts.callback(me._index,me._liLength);
+        fnAutoSlide(me);
     }
 
     // 轮播动作
