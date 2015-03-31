@@ -7,16 +7,16 @@
 ## 示例
 
 ![扫一扫](website.png)
-[DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index.html)
+[DEMO1链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index.html)
 
 ![扫一扫](website-pic.png)
-[DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-pic.html)
+[DEMO2链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-pic.html)
 
 ![扫一扫](website-text.png)
-[DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
+[DEMO3链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
 
 ![扫一扫](website-switch.png)
-[DEMO链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index-switch.html)
+[DEMO4链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index-switch.html)
 
 ## 依赖
 
@@ -44,12 +44,17 @@ $('.element').swipeSlide({
 | lazyLoad         | 图片懒加载 | false | true和false |
 | callback         | 回调方法   | 空    | function(i,sum){}（i为索引值，sum为总和） |
 
+## API
+
+暴露一些功能，可以让swipeSlide更灵活的使用
+
+`goTo(num)` 指定轮播，详见[DEMO4代码](index-switch.html)
+
 ## 最新版本
 
-### 3.2.0(150322)
+### 3.2.1(150331)
 
-* 增加回调callback方法sum参数
-* 修复连续滚动时只滚动一轮bug
+* 优化滑动时禁止另外一个方向的滑动事件
 
 [所有更新日志](Changelog.md)
 

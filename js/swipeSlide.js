@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.2.0(150322)
+ * 3.2.1(150331)
  */
 ;(function(win,$){
     'use strict';
@@ -62,6 +62,7 @@
         }, options);
         // 轮播数量
         me._liLength = me.opts.li.length;
+        me.isScrolling;
 
         // 如果轮播小于等于1个，跳出
         if(me._liLength <= 1) return false;
@@ -113,6 +114,9 @@
         });
         me.$el.on(touchEvents.touchEnd,function(){
             fnTouchend(me);
+        });
+        me.opts.ul.on('webkitTransitionEnd MSTransitionEnd transitionend',function(){
+            fnAutoSlide(me);
         });
 
         // 横竖屏、窗口调整
@@ -180,6 +184,7 @@
 
     // touchstart
     function fnTouchstart(e, me){
+        me.isScrolling = undefined;
         // 按下时的坐标
         me._startX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
         me._startY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
@@ -187,22 +192,33 @@
 
     // touchmove
     function fnTouchmove(e, me){
-        if (e.preventDefault) e.preventDefault();
-        else e.returnValue = false;
+        me._moveDistance = me._moveDistanceIE = 0;
         // 如果自动切换，move的时候清除autoSlide自动轮播方法
-        if(me.opts.autoSwipe) clearInterval(me.autoSlide);
+        if(me.opts.autoSwipe) fnStopSlide(me);
         me.allowSlideClick = false;
         // 触摸时的坐标
         me._curX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
         me._curY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
         // 触摸时的距离
-        me._moveX = me._moveX_ie = me._curX - me._startX;
-        me._moveY = me._moveY_ie = me._curY - me._startY;
-
-        // 触摸时跟手
-        fnTransition(me, me.opts.ul, 0);
+        me._moveX = me._curX - me._startX;
+        me._moveY = me._curY - me._startY;
+        // 优化触摸禁止事件
+        if(typeof me.isScrolling == 'undefined'){
+            if(me.opts.axisX){
+                me.isScrolling = !!(Math.abs(me._moveX) >= Math.abs(me._moveY));
+            }else{
+                me.isScrolling = !!(Math.abs(me._moveY) >= Math.abs(me._moveX));
+            }
+        }
+        
         // 距离
-        me._moveDistance = me._moveDistanceIE = me.opts.axisX ? me._moveX : me._moveY;
+        if(me.isScrolling){
+            if (e.preventDefault) e.preventDefault();
+            else e.returnValue = false;
+            // 触摸时跟手
+            fnTransition(me, me.opts.ul, 0);
+            me._moveDistance = me._moveDistanceIE = me.opts.axisX ? me._moveX : me._moveY;
+        }
         if(!me.opts.continuousScroll){
             // 如果是第一屏，并且往下滚动，就不让滚动 || 如果是最后一屏，并且往上滚动，就不让滚动
             if(me._index == 0 && me._moveDistance > 0 || (me._index + 1) >= me._liLength && me._moveDistance < 0){
@@ -215,8 +231,13 @@
 
     // touchend
     function fnTouchend(me){
+        // 优化触摸禁止事件
+        if(!me.isScrolling){
+            fnAutoSlide(me);
+        }
+
+        // 解决IE滑动触发click
         if(browser.ie10 || browser.ie11){
-            // 解决IE滑动触发click
             if(Math.abs(me._moveDistanceIE) < 5){
                 me.allowSlideClick = true;
             }
@@ -238,16 +259,21 @@
                 fnSlide(me, 'next', '.3');
             }
         }
-        me._moveDistance = me._moveDistanceIE = 0;
     }
 
     // 自动轮播
     function fnAutoSlide(me){
         if(me.opts.autoSwipe){
+            fnStopSlide(me);
             me.autoSlide = setInterval(function(){
                 fnSlide(me, 'next', '.3');
             },me.opts.speed);
         }
+    }
+
+    // 停止轮播
+    function fnStopSlide(me){
+        clearInterval(me.autoSlide);
     }
 
     // 指定轮播
@@ -306,7 +332,6 @@
                 setTimeout(function(){
                     fnScroll(me, 0);
                     me.opts.callback(me._index,me._liLength);
-                    fnAutoSlide(me);
                     return;
                 },300);
             }else if(me._index < 0){
@@ -315,7 +340,6 @@
                 setTimeout(function(){
                     fnScroll(me, 0);
                     me.opts.callback(me._index,me._liLength);
-                    fnAutoSlide(me);
                     return;
                 },300);
             }else{
@@ -330,15 +354,12 @@
             fnScroll(me, num);
         }
         me.opts.callback(me._index,me._liLength);
-        fnAutoSlide(me);
     }
 
     // 轮播动作
     function fnScroll(me, num){
         fnTransition(me, me.opts.ul, num);
         fnTranslate(me, me.opts.ul, -me._index*me._slideDistance);
-        // 清除autoSlide自动轮播方法
-        clearInterval(me.autoSlide);
     }
 
 })(window, window.Zepto || window.jQuery);
