@@ -36,6 +36,7 @@ $('.element').swipeSlide({
 |------------------|----------|--------|----------------|
 | ul               | 父dom    | ul     | .element的子dom |
 | li               | 子dom    | li     | ul的子dom       |
+| index            | 轮播初始值 | 0     | 数字       |
 | continuousScroll | 连续滚动   | false | true和false |
 | autoSwipe        | 自动切换   | true  | true和false |
 | speed            | 切换速度   | 4000  | 数字        |
@@ -52,9 +53,10 @@ $('.element').swipeSlide({
 
 ## 最新版本
 
-### 3.2.1(150331)
+### 3.3.0(150424)
 
-* 优化滑动时禁止另外一个方向的滑动事件
+* 增加轮播初始值index参数
+* 修复点击触发轮播滚动
 
 [所有更新日志](Changelog.md)
 

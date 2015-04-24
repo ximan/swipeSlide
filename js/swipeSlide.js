@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.2.1(150331)
+ * 3.3.0(150424)
  */
 ;(function(win,$){
     'use strict';
@@ -40,7 +40,6 @@
     var sS = function(element, options){
         var me = this;
         me.$el = $(element);
-        me._index = 0;
         me._distance = 50;
         me.allowSlideClick = true;
         me.init(options);
@@ -52,6 +51,7 @@
         me.opts = $.extend({}, {
             ul : me.$el.children('ul'),             // 父dom
             li : me.$el.children().children('li'),  // 子dom
+            index : 0,                              // 轮播初始值
             continuousScroll : false,               // 连续滚动
             autoSwipe : true,                       // 自动切换
             speed : 4000,                           // 切换速度
@@ -60,6 +60,7 @@
             lazyLoad : false,                       // 图片懒加载
             callback : function(){}                 // 回调方法
         }, options);
+        me._index = me.opts.index;
         // 轮播数量
         me._liLength = me.opts.li.length;
         me.isScrolling;
@@ -67,16 +68,26 @@
         // 如果轮播小于等于1个，跳出
         if(me._liLength <= 1) return false;
 
-        // 懒加载图片
-        if(me.opts.lazyLoad){
-            fnLazyLoad(me, '0');
-            fnLazyLoad(me, '1');
-            // 加载最后一屏，为了连续滚动复制dom
-            if(me.opts.continuousScroll) fnLazyLoad(me, me._liLength-1);
-        }
-
         // 连续滚动，复制dom
         if(me.opts.continuousScroll) me.opts.ul.prepend(me.opts.li.last().clone()).append(me.opts.li.first().clone());
+
+        // 懒加载图片
+        if(me.opts.lazyLoad){
+            fnLazyLoad(me, me._index);
+            if(me.opts.continuousScroll){
+                fnLazyLoad(me, me._index+1);
+                fnLazyLoad(me, me._index+2);
+                // 如果是第一屏
+                if(me._index == 0){
+                    fnLazyLoad(me, me._liLength);
+                // 如果是最后一屏
+                }else if(me._index+1 == me._liLength){
+                    fnLazyLoad(me, 1);
+                }
+            }else{
+                fnLazyLoad(me, me._index+1 == me._liLength ? me._liLength-2 : me._index+1);
+            }
+        }
 
         // 轮播的宽度
         fnGetSlideDistance();
@@ -185,6 +196,7 @@
     // touchstart
     function fnTouchstart(e, me){
         me.isScrolling = undefined;
+        me._moveDistance = me._moveDistanceIE = 0;
         // 按下时的坐标
         me._startX = support.touch ? e.touches[0].pageX : (e.pageX || e.clientX);
         me._startY = support.touch ? e.touches[0].pageY : (e.pageY || e.clientY);
@@ -192,7 +204,6 @@
 
     // touchmove
     function fnTouchmove(e, me){
-        me._moveDistance = me._moveDistanceIE = 0;
         // 如果自动切换，move的时候清除autoSlide自动轮播方法
         if(me.opts.autoSwipe) fnStopSlide(me);
         me.allowSlideClick = false;
@@ -255,10 +266,11 @@
             if(me._moveDistance > me._distance){
                 fnSlide(me, 'prev', '.3');
             // 手指触摸下一屏滚动
-            }else{
+            }else if(Math.abs(me._moveDistance) > me._distance){
                 fnSlide(me, 'next', '.3');
             }
         }
+        me._moveDistance = me._moveDistanceIE = 0;
     }
 
     // 自动轮播
@@ -305,6 +317,13 @@
             if(me.opts.lazyLoad){
                 if(me.opts.continuousScroll){
                     fnLazyLoad(me, me._index+2);
+                    // 滑到最后一屏
+                    if(me._index+1 == me._liLength){
+                        fnLazyLoad(me, 1);
+                    // 最后一屏，继续往后滑动
+                    }else if(me._index == me._liLength){
+                        fnLazyLoad(me, 0);
+                    }
                 }else{
                     fnLazyLoad(me, me._index+1);
                 }
@@ -312,15 +331,18 @@
         }else if(go == 'prev'){
             me._index--;
             if(me.opts.lazyLoad){
-                // 往前到最后一屏，加载最后一屏前一屏
-                if(me._index < 0){
-                    fnLazyLoad(me, me._liLength-1);
-                }else{
-                    if(me.opts.continuousScroll){
-                        fnLazyLoad(me, me._index);
-                    }else{
-                        fnLazyLoad(me, me._index-1);
+                if(me.opts.continuousScroll){
+                    fnLazyLoad(me, me._index);
+                    // 滑到第一屏
+                    if(me._index == 0){
+                        fnLazyLoad(me, me._liLength);
+                    
+                    // 第一屏，继续往前滑动
+                    }else if(me._index < 0){
+                        fnLazyLoad(me, me._liLength-1);
                     }
+                }else{
+                    fnLazyLoad(me, me._index-1);
                 }
             }
         }
