@@ -7,16 +7,19 @@
 ## 示例
 
 ![扫一扫](website.png)
-[DEMO1链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index.html)
+[DEMO1链接](http://ximan.github.io/swipeSlide/index.html)
 
 ![扫一扫](website-pic.png)
-[DEMO2链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-pic.html)
+[DEMO2链接](http://ximan.github.io/swipeSlide/full-screen-pic.html)
 
 ![扫一扫](website-text.png)
-[DEMO3链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html)
+[DEMO3链接](http://ximan.github.io/swipeSlide/full-screen-text.html)
 
 ![扫一扫](website-switch.png)
-[DEMO4链接](http://ons.me/wp-content/uploads/2014/09/swipeSlide/index-switch.html)
+[DEMO4链接](http://ximan.github.io/swipeSlide/index-switch.html)
+
+![扫一扫](website-comment.png)
+[DEMO4链接](http://ximan.github.io/swipeSlide/comment-thumbnails.html)
 
 ## 依赖
 
