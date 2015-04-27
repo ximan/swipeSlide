@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1, user-scalable=0" charset="UTF-8">
+    <title>swipeSlide</title>
+<style>
+*{
+    margin: 0;
+    padding: 0;
+    /* 防止点击闪烁 */
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    /* 缩放网页，文字大小不变 */
+    -webkit-text-size-adjust:none;
+}
+body{
+    font-size: 14px;
+}
+h1{
+    font-size: 16px;
+}
+h2{
+    font-size: 14px;
+}
+.slide{
+    position: relative;
+    max-width: 640px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+.slide:after{
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: 50%;
+}
+.slide ul{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.slide li{
+    list-style: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slide_tab{
+    max-width: 640px;
+    margin: 20px auto;
+    border-bottom: 1px solid #ccc;
+}
+.slide_tab .tab_box{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 44px;
+    line-height: 44px;
+    background-color: #aaa;
+    text-align: center;
+    color: #fff;
+}
+.slide_tab .btn_left,.slide_tab .btn_right{
+    width: 50px;
+}
+.slide_tab .tab{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+.slide_tab .tab span{
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+.slide_tab .tab .cur{
+    background-color: #fff;
+    color: #333;
+}
+.slide_tab .product_box{
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border-left: 1px solid #ccc;
+}
+.slide_tab .product_box:after{
+    padding-top: 100%;
+}
+.slide_tab .product_box li:after{
+    content:'';
+    display:table;
+    clear:both;
+}
+.slide_tab .product_box .pic{
+    position: relative;
+    float: left;
+    width: 50%;
+    box-sizing: border-box;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+.slide_tab .product_box .pic:after{
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: 100%;
+}
+.slide_tab .product_box .pic img{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+<body>
+<h1><a href="http://ons.me/" target="_blank" title="一个热爱网络的年轻人的博客">西门的后花园</a></h1>
+<h2><a href="http://ons.me/500.html" target="_blank">swipeSlide for Zepto/jQuery Plugin，移动端（基于Zepto/jQuery）的轮播插件</a></h2>
+
+<div class="slide_tab">
+    <div class="tab_box">
+        <span class="btn_left">左</span>
+        <div class="tab">
+            <span class="item">1</span>
+            <span class="item">2</span>
+            <span class="item">3</span>
+            <span class="item">4</span>
+        </div>        
+        <span class="btn_right">右</span>
+    </div>
+    <div class="product_box slide">
+        <ul>
+            <li>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d8.yihaodianimg.com/V00/M0A/75/FD/CgQDslQ3umKAIwpLAAOJQbKq0pg46901_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d8.yihaodianimg.com/V00/M0A/75/FD/CgQDslQ3umKAIwpLAAOJQbKq0pg46901_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d8.yihaodianimg.com/V00/M0A/75/FD/CgQDslQ3umKAIwpLAAOJQbKq0pg46901_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d8.yihaodianimg.com/V00/M0A/75/FD/CgQDslQ3umKAIwpLAAOJQbKq0pg46901_300x300.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d9.yihaodianimg.com/N05/M00/24/DF/CgQI0lQ3umiAYat_AAMa5tG_TXY20001_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d9.yihaodianimg.com/N05/M00/24/DF/CgQI0lQ3umiAYat_AAMa5tG_TXY20001_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d9.yihaodianimg.com/N05/M00/24/DF/CgQI0lQ3umiAYat_AAMa5tG_TXY20001_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d9.yihaodianimg.com/N05/M00/24/DF/CgQI0lQ3umiAYat_AAMa5tG_TXY20001_300x300.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d6.yihaodianimg.com/N05/M02/24/DF/CgQI0lQ3um2AEZpbAANwKuHIjlw93501_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d6.yihaodianimg.com/N05/M02/24/DF/CgQI0lQ3um2AEZpbAANwKuHIjlw93501_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d6.yihaodianimg.com/N05/M02/24/DF/CgQI0lQ3um2AEZpbAANwKuHIjlw93501_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d6.yihaodianimg.com/N05/M02/24/DF/CgQI0lQ3um2AEZpbAANwKuHIjlw93501_300x300.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d7.yihaodianimg.com/V00/M03/75/FD/CgQDslQ3unuAdCOKAAGQmS56iC058101_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d7.yihaodianimg.com/V00/M03/75/FD/CgQDslQ3unuAdCOKAAGQmS56iC058101_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d7.yihaodianimg.com/V00/M03/75/FD/CgQDslQ3unuAdCOKAAGQmS56iC058101_300x300.jpg" alt="">
+                </a>
+                <a href="#" class="pic">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="http://d7.yihaodianimg.com/V00/M03/75/FD/CgQDslQ3unuAdCOKAAGQmS56iC058101_300x300.jpg" alt="">
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script src="js/zepto.min.js"></script>
+<!-- <script src="js/jquery.min.js"></script> -->
+<script src="js/swipeSlide.min.js"></script>
+<script>
+$(function(){
+    var slideTab = $('.slide_tab .slide').swipeSlide({
+        continuousScroll:true,
+        autoSwipe : false,
+        lazyLoad : true,
+        callback : function(i){
+            $('.slide_tab .tab .item').eq(i).addClass('cur').siblings().removeClass('cur');
+        }
+    });
+    $('.slide_tab .tab .item').on('click',function(i){
+        slideTab.goTo($(this).index());
+    });
+    $('.slide_tab .btn_left').on('click',function(i){
+        slideTab.goTo('prev');
+    });
+    $('.slide_tab .btn_right').on('click',function(i){
+        slideTab.goTo('next');
+    });
+});
+</script>
+</body>
+</html>

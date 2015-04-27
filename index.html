@@ -1,169 +1,210 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Swipeslide by ximan</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Swipeslide</h1>
-      <h2 class="project-tagline">移动端轮播图（基于Zepto/jQuery）</h2>
-      <a href="https://github.com/ximan/swipeSlide" class="btn">View on GitHub</a>
-      <a href="https://github.com/ximan/swipeSlide/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/ximan/swipeSlide/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1, user-scalable=0" charset="UTF-8">
+    <title>swipeSlide</title>
+<style>
+*{
+    margin: 0;
+    padding: 0;
+    /* 防止点击闪烁 */
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    /* 缩放网页，文字大小不变 */
+    -webkit-text-size-adjust:none;
+}
+body{
+    font-size: 14px;
+}
+h1{
+    font-size: 16px;
+}
+h2{
+    font-size: 14px;
+}
+.slide{
+    position: relative;
+    max-width: 640px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+.slide:after{
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: 50%;
+}
+.slide ul{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.slide li{
+    list-style: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+/* 解决js阻塞页面显示首屏 */
+.slide li:first-child{
+    z-index: 1;
+}
+.slide li img{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.slide .dot{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 5;
+    font-size: 0;
+}
+.slide .dot span{
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: 5px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+}
+.slide .dot .cur{
+    background-color: #fff;
+}
+/* 测试横竖屏 */
+#slide1{
+    width: 320px;
+}
 
-    <section class="main-content">
-      <h1>
-<a id="swipeslide-for-zeptojquery-plugin" class="anchor" href="#swipeslide-for-zeptojquery-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>swipeSlide for Zepto/jQuery Plugin</h1>
+</style>
+</head>
+<body>
+<h1><a href="http://ons.me/" target="_blank" title="一个热爱网络的年轻人的博客">西门的后花园</a></h1>
+<h2><a href="http://ons.me/500.html" target="_blank">swipeSlide for Zepto/jQuery Plugin，移动端（基于Zepto/jQuery）的轮播插件</a></h2>
 
-<h2>
-<a id="简介" class="anchor" href="#%E7%AE%80%E4%BB%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>简介</h2>
+<div class="slide" id="slide1">
+    <ul>
+        <li>
+            <a href="//m.yhd.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.baidu.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//m.taobao.com/">
+                <img src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.qq.com/">
+                <img src="http://d10.yihaodianimg.com/N07/M09/26/8B/CgQI0FQFd8-ACrb7AADBtSan3a084000.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
 
-<p>移动端（基于Zepto/jQuery）的轮播插件：<a href="http://ons.me/500.html">http://ons.me/500.html</a></p>
+<div class="slide" id="slide2">
+    <ul>
+        <li>
+            <a href="//m.yhd.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.baidu.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//m.taobao.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.qq.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/N07/M09/26/8B/CgQI0FQFd8-ACrb7AADBtSan3a084000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.163.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d11.yihaodianimg.com/N05/M07/8B/45/CgQI01QGlhyAevtRAADW1vYf_BE12500.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.sohu.com/">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="http://d10.yihaodianimg.com/N06/M0B/2F/38/CgQIzlQHyBWAbOr0AAChSgod8ho33700.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
 
-<h2>
-<a id="示例" class="anchor" href="#%E7%A4%BA%E4%BE%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>示例</h2>
+<div class="slide" id="slide3">
+    <ul>
+        <li>
+            <a href="//m.yhd.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M03/4D/41/CgQDsVQG4d6AISZPAAFa7N3KyPY18100.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.baidu.com/">
+                <img src="http://d10.yihaodianimg.com/V00/M04/32/59/CgQDsVQDEtaAVv4BAAEFc6n3fws75000.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//m.taobao.com/">
+                <img src="http://d11.yihaodianimg.com/N05/M04/82/EC/CgQI01QEHoiAFBbgAAC9du5zOPc62900.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="//www.qq.com/">
+                <img src="http://d10.yihaodianimg.com/N07/M09/26/8B/CgQI0FQFd8-ACrb7AADBtSan3a084000.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+    <div class="dot">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
 
-<p><img src="website.png" alt="扫一扫">
-<a href="http://ons.me/wp-content/uploads/2014/09/swipeSlide/index.html">DEMO1链接</a></p>
+<script src="js/zepto.min.js"></script>
+<!-- <script src="js/jquery.min.js"></script> -->
+<script src="js/swipeSlide.min.js"></script>
+<script>
+$(function(){
+    // demo1
+    $('#slide1').swipeSlide();
 
-<p><img src="website-pic.png" alt="扫一扫">
-<a href="http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-pic.html">DEMO2链接</a></p>
+    // demo2
+    $('#slide2').swipeSlide({
+        autoSwipe : false,
+        continuousScroll:true,
+        lazyLoad : true
+    });
 
-<p><img src="website-text.png" alt="扫一扫">
-<a href="http://ons.me/wp-content/uploads/2014/09/swipeSlide/full-screen-text.html">DEMO3链接</a></p>
-
-<p><img src="website-switch.png" alt="扫一扫">
-<a href="http://ons.me/wp-content/uploads/2014/09/swipeSlide/index-switch.html">DEMO4链接</a></p>
-
-<h2>
-<a id="依赖" class="anchor" href="#%E4%BE%9D%E8%B5%96" aria-hidden="true"><span class="octicon octicon-link"></span></a>依赖</h2>
-
-<p>Zepto 或者 jQuery</p>
-
-<h2>
-<a id="使用方法" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>使用方法</h2>
-
-<pre><code>$('.element').swipeSlide({
-    // 参数
+    // demo3
+    $('#slide3').swipeSlide({
+        continuousScroll:true,
+        speed : 3000,
+        transitionType : 'cubic-bezier(0.22, 0.69, 0.72, 0.88)',
+        callback : function(i){
+            $('.dot').children().eq(i).addClass('cur').siblings().removeClass('cur');
+        }
+    });
 });
-</code></pre>
-
-<h2>
-<a id="参数列表" class="anchor" href="#%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8" aria-hidden="true"><span class="octicon octicon-link"></span></a>参数列表</h2>
-
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>说明</th>
-<th>默认值</th>
-<th>可填值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ul</td>
-<td>父dom</td>
-<td>ul</td>
-<td>.element的子dom</td>
-</tr>
-<tr>
-<td>li</td>
-<td>子dom</td>
-<td>li</td>
-<td>ul的子dom</td>
-</tr>
-<tr>
-<td>index</td>
-<td>轮播初始值</td>
-<td>0</td>
-<td>数字</td>
-</tr>
-<tr>
-<td>continuousScroll</td>
-<td>连续滚动</td>
-<td>false</td>
-<td>true和false</td>
-</tr>
-<tr>
-<td>autoSwipe</td>
-<td>自动切换</td>
-<td>true</td>
-<td>true和false</td>
-</tr>
-<tr>
-<td>speed</td>
-<td>切换速度</td>
-<td>4000</td>
-<td>数字</td>
-</tr>
-<tr>
-<td>axisX</td>
-<td>X轴滚动</td>
-<td>true</td>
-<td>true和false</td>
-</tr>
-<tr>
-<td>transitionType</td>
-<td>过渡类型</td>
-<td>ease</td>
-<td>linear/ease/ease-in/ease-out/ease-in-out/cubic-bezier</td>
-</tr>
-<tr>
-<td>lazyLoad</td>
-<td>图片懒加载</td>
-<td>false</td>
-<td>true和false</td>
-</tr>
-<tr>
-<td>callback</td>
-<td>回调方法</td>
-<td>空</td>
-<td>function(i,sum){}（i为索引值，sum为总和）</td>
-</tr>
-</tbody>
-</table>
-
-<h2>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
-
-<p>暴露一些功能，可以让swipeSlide更灵活的使用</p>
-
-<p><code>goTo(num)</code> 指定轮播，详见<a href="index-switch.html">DEMO4代码</a></p>
-
-<h2>
-<a id="最新版本" class="anchor" href="#%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>最新版本</h2>
-
-<h3>
-<a id="331150427" class="anchor" href="#331150427" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.1(150427)</h3>
-
-<ul>
-<li>修复只有1个轮播时不执行lazyLoad和callback</li>
-</ul>
-
-<p><a href="Changelog.md">所有更新日志</a></p>
-
-<h2>
-<a id="缺点" class="anchor" href="#%E7%BC%BA%E7%82%B9" aria-hidden="true"><span class="octicon octicon-link"></span></a>缺点</h2>
-
-<p>只能固定高度或者成比例宽度，无法自适应高度。</p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/ximan/swipeSlide">Swipeslide</a> is maintained by <a href="https://github.com/ximan">ximan</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
-  </body>
+</script>
+</body>
 </html>
-

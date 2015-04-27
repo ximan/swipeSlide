@@ -1,0 +1,32 @@
+{
+  "name": "swipeSlide",
+  "version": "2.2.1",
+  "homepage": "https://github.com/ximan/swipeSlide",
+  "authors": [
+    "ximan"
+  ],
+  "description": "移动端轮播图（基于Zepto/jQuery）",
+  "main": "js/swipeSlide.min.js",
+  "keywords": [
+    "jquery",
+    "zepto",
+    "slide",
+    "scroll"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "js/jquery.min.js",
+    "js/zepto.min.js",
+    "website-pic.png",
+    "website-text.png",
+    "website.png",
+    ".gitignore",
+    "full-screen-pic.html",
+    "full-screen-text.html",
+    "index.html",
+    "README.md"
+  ]
+}
