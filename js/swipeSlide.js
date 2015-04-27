@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.3.0(150424)
+ * 3.3.1(150427)
  */
 ;(function(win,$){
     'use strict';
@@ -65,8 +65,14 @@
         me._liLength = me.opts.li.length;
         me.isScrolling;
 
+        // 回调
+        me.opts.callback(me._index,me._liLength);
+
         // 如果轮播小于等于1个，跳出
-        if(me._liLength <= 1) return false;
+        if(me._liLength <= 1){
+            if(me.opts.lazyLoad) fnLazyLoad(me, 0);
+            return false;
+        }
 
         // 连续滚动，复制dom
         if(me.opts.continuousScroll) me.opts.ul.prepend(me.opts.li.last().clone()).append(me.opts.li.first().clone());
@@ -110,9 +116,6 @@
 
         // 调用轮播
         fnAutoSlide(me);
-
-        // 回调
-        me.opts.callback(me._index,me._liLength);
 
         // 绑定触摸
         me.$el.on(touchEvents.touchStart,function(e){

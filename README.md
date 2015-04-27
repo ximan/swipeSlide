@@ -53,10 +53,9 @@ $('.element').swipeSlide({
 
 ## 最新版本
 
-### 3.3.0(150424)
+### 3.3.1(150427)
 
-* 增加轮播初始值index参数
-* 修复点击触发轮播滚动
+* 修复只有1个轮播时不执行lazyLoad和callback
 
 [所有更新日志](Changelog.md)
 
