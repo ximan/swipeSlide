@@ -142,7 +142,7 @@
         // 获取轮播宽度
         function fnGetSlideDistance(){
             var $li = me.opts.ul.children();
-            me._slideDistance = me.opts.axisX ? me.opts.li.width() : me.opts.li.height();
+            me._slideDistance = me.opts.axisX ? me.opts.ul.width() : me.opts.ul.height();
             // 定位
             fnTransition(me, me.opts.ul, 0);
             fnTranslate(me, me.opts.ul, -me._slideDistance*me._index);
