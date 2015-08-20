@@ -381,7 +381,10 @@
             }
             fnScroll(me, num);
         }
-        me.opts.callback(me._index,me._liLength,me.$el);
+        // 如果第二个参数为空，就不回调
+        if(arguments[1] != ''){
+            me.opts.callback(me._index,me._liLength,me.$el);
+        }
     }
 
     // 轮播动作
