@@ -165,6 +165,10 @@ html,body{
 $(function(){
     $('.full').swipeSlide({
         autoSwipe:false,
+        firstCallback:function(i,sum){
+            $('.arrow-left').show();
+            $('.full li').first().addClass('cur');
+        },
         callback:function(i,sum){
             if(i <= 0){
                 $('.arrow-left').show();

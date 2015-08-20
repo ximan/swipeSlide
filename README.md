@@ -46,7 +46,8 @@ $('.element').swipeSlide({
 | axisX            | X轴滚动   | true   | true和false |
 | transitionType   | 过渡类型   | ease  | linear/ease/ease-in/ease-out/ease-in-out/cubic-bezier |
 | lazyLoad         | 图片懒加载 | false | true和false |
-| callback         | 回调方法   | 空    | function(i,sum){}（i为索引值，sum为总和） |
+| firstCallback    | 页面加载回调| 空    | function(i,sum,me){}（i为索引值，sum为总和，me为自己） |
+| callback         | 每次滚动回调| 空    | function(i,sum,me){}（参数同上） |
 
 ## API
 
@@ -56,9 +57,12 @@ $('.element').swipeSlide({
 
 ## 最新版本
 
-### 3.3.1(150427)
+### 3.4.0(150820)
 
-* 修复只有1个轮播时不执行lazyLoad和callback
+* 支持多个轮播相同class调用
+* 修改callback仅滚动时才回调（重要）
+* 增加firstCallback页面加载回调
+* 所有回调增加第三个参数me
 
 [所有更新日志](Changelog.md)
 

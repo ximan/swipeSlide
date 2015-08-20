@@ -212,18 +212,21 @@ $(function(){
         continuousScroll:true,
         autoSwipe : false,
         lazyLoad : true,
+        firstCallback : function(i){
+            $('.slide_tab .tab .item').eq(i).addClass('cur');
+        },
         callback : function(i){
             $('.slide_tab .tab .item').eq(i).addClass('cur').siblings().removeClass('cur');
         }
     });
     $('.slide_tab .tab .item').on('click',function(i){
-        slideTab.goTo($(this).index());
+        slideTab[0].goTo($(this).index());
     });
     $('.slide_tab .btn_left').on('click',function(i){
-        slideTab.goTo('prev');
+        slideTab[0].goTo('prev');
     });
     $('.slide_tab .btn_right').on('click',function(i){
-        slideTab.goTo('next');
+        slideTab[0].goTo('next');
     });
 });
 </script>

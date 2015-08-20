@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.3.1(150427)
+ * 3.4.0(150820)
  */
 ;(function(win,$){
     'use strict';
@@ -35,7 +35,11 @@
 
     // 绑定swipeSlide
     $.fn.swipeSlide = function(options){
-        return new sS(this, options);
+        var list = [];
+        this.each(function(i, me){
+            list.push(new sS(me, options));
+        });
+        return list;
     };
     var sS = function(element, options){
         var me = this;
@@ -58,7 +62,8 @@
             axisX : true,                           // X轴
             transitionType : 'ease',                // 过渡类型
             lazyLoad : false,                       // 图片懒加载
-            callback : function(){}                 // 回调方法
+            firstCallback : function(){},           // 页面加载回调
+            callback : function(){}                 // 每次滚动回调
         }, options);
         me._index = me.opts.index;
         // 轮播数量
@@ -66,7 +71,7 @@
         me.isScrolling;
 
         // 回调
-        me.opts.callback(me._index,me._liLength);
+        me.opts.firstCallback(me._index,me._liLength,me.$el);
 
         // 如果轮播小于等于1个，跳出
         if(me._liLength <= 1){
@@ -356,7 +361,6 @@
                 me._index = 0;
                 setTimeout(function(){
                     fnScroll(me, 0);
-                    me.opts.callback(me._index,me._liLength);
                     return;
                 },300);
             }else if(me._index < 0){
@@ -364,7 +368,6 @@
                 me._index = me._liLength-1;
                 setTimeout(function(){
                     fnScroll(me, 0);
-                    me.opts.callback(me._index,me._liLength);
                     return;
                 },300);
             }else{
@@ -378,7 +381,7 @@
             }
             fnScroll(me, num);
         }
-        me.opts.callback(me._index,me._liLength);
+        me.opts.callback(me._index,me._liLength,me.$el);
     }
 
     // 轮播动作

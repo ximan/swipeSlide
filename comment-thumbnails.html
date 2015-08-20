@@ -193,6 +193,10 @@ $(function(){
             continuousScroll : true,
             autoSwipe : false,
             lazyLoad : true,
+            firstCallback : function(i,sum){
+                $('.num_box .num').text(i+1);
+                $('.num_box .sum').text(sum);
+            },
             callback : function(i,sum){
                 $('.num_box .num').text(i+1);
                 $('.num_box .sum').text(sum);
