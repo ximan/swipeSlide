@@ -57,13 +57,9 @@ $('.element').swipeSlide({
 
 ## 最新版本
 
-### 3.4.0(150820)
+### 3.4.1(150902)
 
-* 支持多个轮播相同class调用
-* 修改callback仅滚动时才回调（重要）
-* 增加firstCallback页面加载回调
-* 所有回调增加第三个参数me
-* 修复点击触发callback回调bug
+* 修复不连续滚动时懒加载bug
 
 [所有更新日志](Changelog.md)
 
