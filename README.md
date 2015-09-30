@@ -10,10 +10,10 @@
 [普通轮播DEMO链接](http://ximan.github.io/swipeSlide/index.html)
 
 ![扫一扫](website-pic.png)
-[全屏文字DEMO链接](http://ximan.github.io/swipeSlide/full-screen-pic.html)
+[全屏大图DEMO链接](http://ximan.github.io/swipeSlide/full-screen-pic.html)
 
 ![扫一扫](website-text.png)
-[全屏大图DEMO链接](http://ximan.github.io/swipeSlide/full-screen-text.html)
+[全屏文字DEMO链接](http://ximan.github.io/swipeSlide/full-screen-text.html)
 
 ![扫一扫](website-switch.png)
 [快速切换DEMO链接](http://ximan.github.io/swipeSlide/index-switch.html)
@@ -57,9 +57,9 @@ $('.element').swipeSlide({
 
 ## 最新版本
 
-### 3.4.1(150902)
+### 3.4.2(150930)
 
-* 修复不连续滚动时懒加载bug
+* 修复索引值为0时无法回调bug
 
 [所有更新日志](Changelog.md)
 

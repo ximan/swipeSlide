@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.4.1(150902)
+ * 3.4.2(150930)
  */
 ;(function(win,$){
     'use strict';
@@ -390,7 +390,7 @@
             fnScroll(me, num);
         }
         // 如果第二个参数为空，就不回调
-        if(arguments[1] != ''){
+        if(arguments[1] !== ''){
             me.opts.callback(me._index,me._liLength,me.$el);
         }
     }
