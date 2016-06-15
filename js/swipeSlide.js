@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.4.2(150930)
+ * 3.4.3(160615)
  */
 ;(function(win,$){
     'use strict';
@@ -339,6 +339,7 @@
                     // 最后一屏，继续往后滑动
                     }else if(me._index == me._liLength){
                         fnLazyLoad(me, 0);
+                        fnLazyLoad(me, 2);
                     }
                 }else{
                     fnLazyLoad(me, me._index+1);
