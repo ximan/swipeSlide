@@ -370,6 +370,7 @@
                 me._index = 0;
                 setTimeout(function(){
                     fnScroll(me, 0);
+                    fnAutoSlide(me);
                 //    return;
                 },300);
             }else if(me._index < 0){
@@ -378,6 +379,7 @@
                 setTimeout(function(){
                     fnScroll(me, 0);
                 //   return;
+                    fnAutoSlide(me);
                 },300);
             }else{
                 fnScroll(me, num);
