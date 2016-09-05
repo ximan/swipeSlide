@@ -6,7 +6,7 @@
  */
 ;(function(win,$){
     'use strict';
-    
+
     // 判断IE
     var browser = {
         ie10 : win.navigator.msPointerEnabled,
@@ -151,7 +151,7 @@
             clearTimeout(me.timer);
             me.timer = setTimeout(fnGetSlideDistance,150);
         });
-        
+
         // 获取轮播宽度
         function fnGetSlideDistance(){
             var $li = me.opts.ul.children();
@@ -237,7 +237,7 @@
                 me.isScrolling = !!(Math.abs(me._moveY) >= Math.abs(me._moveX));
             }
         }
-        
+
         // 距离
         if(me.isScrolling){
             if (e.preventDefault) e.preventDefault();
@@ -353,7 +353,7 @@
                     // 滑到第一屏
                     if(me._index == 0){
                         fnLazyLoad(me, me._liLength);
-                    
+
                     // 第一屏，继续往前滑动
                     }else if(me._index < 0){
                         fnLazyLoad(me, me._liLength-1);
@@ -370,14 +370,14 @@
                 me._index = 0;
                 setTimeout(function(){
                     fnScroll(me, 0);
-                    return;
+                //    return;
                 },300);
             }else if(me._index < 0){
                 fnScroll(me, num);
                 me._index = me._liLength-1;
                 setTimeout(function(){
                     fnScroll(me, 0);
-                    return;
+                //   return;
                 },300);
             }else{
                 fnScroll(me, num);
