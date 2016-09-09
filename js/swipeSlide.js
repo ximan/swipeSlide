@@ -2,7 +2,7 @@
  * swipeSlide
  * http://ons.me/500.html
  * 西门
- * 3.4.3(160615)
+ * 3.4.4(160909)
  */
 ;(function(win,$){
     'use strict';
@@ -258,8 +258,7 @@
 
     // touchend
     function fnTouchend(me){
-        // 优化触摸禁止事件
-        if(!me.isScrolling){
+        if(me.opts.autoSwipe){
             fnAutoSlide(me);
         }
 
